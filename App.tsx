@@ -7,7 +7,8 @@
 import {i18nextState} from './i18n';
 import React, {StrictMode, Suspense, useEffect} from 'react';
 import {Text, View} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {enableScreens} from 'react-native-screens';
@@ -15,7 +16,7 @@ import './i18n';
 
 enableScreens();
 
-const MainNavigator = createStackNavigator();
+const MainNavigator = createNativeStackNavigator();
 
 const Fallback = () => {
   console.log('------------------------');
@@ -24,6 +25,12 @@ const Fallback = () => {
   console.log('fallback');
   return (
     <View>
+      <Text>FALLBACK</Text>
+      <Text>FALLBACK</Text>
+      <Text>FALLBACK</Text>
+      <Text>FALLBACK</Text>
+      <Text>FALLBACK</Text>
+      <Text>FALLBACK</Text>
       <Text>FALLBACK</Text>
     </View>
   );
@@ -37,7 +44,7 @@ const I18n = () => {
   console.log(JSON.stringify({a}, null, 2));
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Text>{'About'}</Text>
       <Text>{t('common:app.company.name')}</Text>
       <Text>{t('special:nav.home')}</Text>
@@ -47,11 +54,9 @@ const I18n = () => {
 
 const Main = () => {
   return (
-    <Suspense>
-      <MainNavigator.Navigator>
-        <MainNavigator.Screen name="I18n" component={I18n} i18nIsDynamicList />
-      </MainNavigator.Navigator>
-    </Suspense>
+    <MainNavigator.Navigator>
+      <MainNavigator.Screen name="I18n" component={I18n} i18nIsDynamicList />
+    </MainNavigator.Navigator>
   );
 };
 
@@ -61,11 +66,11 @@ function App(): JSX.Element {
   if (i18nextHasLoaded) {
     return (
       <StrictMode>
-        <View style={{flex: 1}}>
+        <Suspense fallback={<Fallback />}>
           <NavigationContainer>
             <Main />
           </NavigationContainer>
-        </View>
+        </Suspense>
       </StrictMode>
     );
   }
