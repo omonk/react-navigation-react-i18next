@@ -4,7 +4,7 @@
  *
  * @format
  */
-
+import {i18nextState} from './i18n';
 import React, {StrictMode, Suspense, useEffect} from 'react';
 import {Text, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -30,35 +30,46 @@ const Fallback = () => {
 };
 
 const I18n = () => {
-  const {t, i18n} = useTranslation();
+  const {t, i18n} = useTranslation('special');
+  console.log({i18n});
+
+  const a = i18n.getDataByLanguage('en');
+  console.log(JSON.stringify({a}, null, 2));
 
   return (
-    <View key={key}>
+    <View>
       <Text>{'About'}</Text>
-      <Text>{t('app.company.name')}</Text>
+      <Text>{t('common:app.company.name')}</Text>
+      <Text>{t('special:nav.home')}</Text>
     </View>
   );
 };
 
 const Main = () => {
   return (
-    <MainNavigator.Navigator>
-      <MainNavigator.Screen name="I18n" component={I18n} />
-    </MainNavigator.Navigator>
+    <Suspense>
+      <MainNavigator.Navigator>
+        <MainNavigator.Screen name="I18n" component={I18n} i18nIsDynamicList />
+      </MainNavigator.Navigator>
+    </Suspense>
   );
 };
 
 function App(): JSX.Element {
-  return (
-    <StrictMode>
-      <Suspense fallback={<Fallback />}>
+  const i18nextHasLoaded = i18nextState(state => state.hasLoaded);
+
+  if (i18nextHasLoaded) {
+    return (
+      <StrictMode>
         <View style={{flex: 1}}>
           <NavigationContainer>
             <Main />
           </NavigationContainer>
         </View>
-      </Suspense>
-    </StrictMode>
-  );
+      </StrictMode>
+    );
+  }
+
+  return <Fallback />;
 }
 export default App;

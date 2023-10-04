@@ -4,6 +4,12 @@ import Backend from 'i18next-chained-backend';
 import XHR from 'i18next-fetch-backend';
 import {initReactI18next} from 'react-i18next';
 import LocaStorageBackend from '@conpago/i18next-async-storage-backend';
+import {create} from 'zustand';
+
+export const i18nextState = create<{hasLoaded: boolean}>(set => ({
+  hasLoaded: false,
+  setHasLoaded: (hasLoaded: boolean) => set({hasLoaded}),
+}));
 
 /**
  * i18next is super cool, you should read their docs:
@@ -16,35 +22,33 @@ import LocaStorageBackend from '@conpago/i18next-async-storage-backend';
 i18n
   .use(Backend)
   .use(initReactI18next)
-  .init({
-    backend: {
-      backends: [LocaStorageBackend, XHR],
-      backendOptions: [
-        // cache
-        {
-          version: 1,
-          expirationTime: 24 * 60 * 60 * 1000, // 1 day
-        },
-        {
-          loadPath:
-            'https://i18next.github.io/i18next/public/sample_locales/dev/ns.common.json',
-        },
-      ],
+  .init(
+    {
+      lng: 'en',
+      backend: {
+        backends: [LocaStorageBackend, XHR],
+        backendOptions: [
+          // cache
+          {
+            version: 1,
+            expirationTime: 24 * 60 * 60 * 1000, // 1 day
+          },
+          {
+            loadPath:
+              'https://i18next.github.io/i18next/public/sample_locales/dev/ns.{{ns}}.json',
+          },
+        ],
+      },
+      ns: ['common'],
+      defaultNS: 'common',
+      compatibilityJSON: 'v3',
+      lowerCaseLng: true,
+      debug: true,
+      react: {useSuspense: true},
     },
-    ns: ['common'],
-    defaultNS: 'common',
-    fallbackLng: {
-      'es-us': ['en-us', 'en'],
-      default: ['en'],
+    () => {
+      i18nextState.setState({hasLoaded: true});
     },
-    compatibilityJSON: 'v3',
-    lowerCaseLng: true,
-
-    interpolation: {
-      escapeValue: false,
-    },
-    debug: true,
-    react: {useSuspense: true},
-  });
+  );
 
 export default i18n;
