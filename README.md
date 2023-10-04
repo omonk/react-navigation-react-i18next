@@ -1,8 +1,46 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-# Getting Started
+# react-navigation with react-i18next example
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+To simulate react-navigation not rendering the main I18n view
+
+- Load the app, see a blank screen
+- Make the following diff
+
+```
+diff --git a/i18n.ts b/i18n.ts
+index 873510d..7890327 100644
+--- a/i18n.ts
++++ b/i18n.ts
+@@ -44,7 +44,7 @@ i18n
+       compatibilityJSON: 'v3',
+       lowerCaseLng: true,
+       debug: true,
+-      react: {useSuspense: true},
++      react: {useSuspense: false},
+     },
+     () => {
+       i18nextState.setState({hasLoaded: true});
+```
+
+- Reload the app, see the I18n view
+
+Looking at the component tree in Flipper we can see that the I18n view is rendered with the resolved text but react-navigation is not rendering the main view:
+
+[![Flipper screenshot](<./readme/image%20(2).png>)](<./readme/image%20(2).png>)
+[![Flipper screenshot](<./readme/image%20(4).png>)](<./readme/image%20(4).png>)
+
+## Suspender and Anonymous not rendering the main view
+
+[![Flipper screenshot](<./readme/image%20(1).png>)](<./readme/image%20(1).png>)
+
+## CardContainer is blank
+
+[![Flipper screenshot](<./readme/image%20(3).png>)](<./readme/image%20(3).png>)
+
+# Runing the app
+
+> **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ## Step 1: Start the Metro Server
 
