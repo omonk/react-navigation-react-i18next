@@ -23,6 +23,10 @@ index 873510d..7890327 100644
        i18nextState.setState({hasLoaded: true});
 ```
 
+## This is what should be rendered
+
+[![Screenshot](<./readme/image%20(5).png>)](<./readme/image%20(5).png>)
+
 - Reload the app, see the I18n view
 
 Looking at the component tree in Flipper we can see that the I18n view is rendered with the resolved text but react-navigation is not rendering the main view:
